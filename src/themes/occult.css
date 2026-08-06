@@ -1,0 +1,36 @@
+/**
+ * Tema OCCULT — mansão, velas e segredos antigos.
+ * Violeta-noite, pergaminho, dourado de vela.
+ */
+:root[data-theme="occult"] {
+  --t-bg: #120d1c;
+  --t-surface: #1c1428;
+  --t-paper: #e8dcc2;
+  --t-ink: #2a2117;
+  --t-fg: #ded6e6;
+  --t-accent: #9a6fd0;
+  --t-accent2: #cf9433;
+  --t-ok: #5d9c6c;
+  --t-danger: #cf5266;
+  --t-muted: #8a7f9c;
+  --t-font-display: "Cinzel", Georgia, serif;
+  --t-font-body: "EB Garamond", Georgia, serif;
+  font-size: 18px; /* o Garamond rende menor no mesmo corpo */
+  /* luz de vela no rodapé + vinheta nas bordas */
+  --t-grain:
+    radial-gradient(ellipse 60% 34% at 50% 104%, rgba(207, 148, 51, 0.1), transparent 70%),
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+[data-theme="occult"] .dossier {
+  border-radius: 4px;
+  /* pergaminho: bordas queimadas de leve */
+  box-shadow:
+    0 0 0 1px rgba(42, 33, 23, 0.4),
+    0 0 26px rgba(0, 0, 0, 0.5),
+    inset 0 0 34px rgba(120, 84, 30, 0.13);
+}
+
+[data-theme="occult"] .theme-title {
+  letter-spacing: 0.1em;
+}

@@ -1,0 +1,36 @@
+/**
+ * Tema COZY — mistério aconchegante de cidadezinha.
+ * Creme quente, terracota, verde-sálvia. É o único tema claro do jogo:
+ * o contraste com os outros casos faz parte do charme.
+ */
+:root[data-theme="cozy"] {
+  --t-bg: #f4ead8;
+  --t-surface: #fdf7ea;
+  --t-paper: #fffdf4;
+  --t-ink: #3d2f24;
+  --t-fg: #443528;
+  --t-accent: #b0563b;
+  --t-accent2: #67875a;
+  --t-ok: #58864b;
+  --t-danger: #bf4040;
+  --t-muted: #8f7c69;
+  --t-font-display: "Playfair Display", Georgia, serif;
+  --t-font-body: "Lora", Georgia, serif;
+  /* toalha de mesa: um pontilhado discreto */
+  --t-grain: radial-gradient(rgba(176, 86, 59, 0.05) 1px, transparent 1.5px);
+  --t-grain-size: 22px 22px;
+}
+
+[data-theme="cozy"] .dossier {
+  border: 1px solid rgba(61, 47, 36, 0.14);
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(120, 84, 50, 0.16);
+}
+
+[data-theme="cozy"] .panel {
+  border-color: rgba(176, 86, 59, 0.25);
+}
+
+[data-theme="cozy"] .theme-title {
+  font-style: italic;
+}

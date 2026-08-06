@@ -1,0 +1,45 @@
+/**
+ * Tema TECH — thriller moderno, tablet policial.
+ * Azul-noite, painéis de vidro, ciano de interface e âmbar de alerta.
+ * Aqui até o "papel" é uma tela: o dossiê vira painel escuro.
+ */
+:root[data-theme="tech"] {
+  --t-bg: #0a0f16;
+  --t-surface: #101a26;
+  --t-paper: #122030;
+  --t-ink: #d9e6f2;
+  --t-fg: #cfdcea;
+  --t-accent: #38bdf8;
+  --t-accent2: #f5a623;
+  --t-ok: #34d399;
+  --t-danger: #f4577b;
+  --t-muted: #64748b;
+  --t-font-display: "Rajdhani", "Inter", sans-serif;
+  --t-font-body: "Inter", system-ui, sans-serif;
+  /* varredura de scanner + brilho frio no topo */
+  --t-grain:
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(56, 189, 248, 0.07), transparent 70%),
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(56, 189, 248, 0.02) 3px 4px);
+}
+
+[data-theme="tech"] .dossier {
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 1px rgba(10, 15, 22, 0.9),
+    0 0 22px rgba(56, 189, 248, 0.1);
+}
+
+[data-theme="tech"] .theme-title {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+[data-theme="tech"] .mark-claim {
+  box-shadow: 0 2px 0 var(--t-accent2);
+  background: color-mix(in srgb, var(--t-accent2) 22%, transparent);
+}
+[data-theme="tech"] .mark-fact {
+  box-shadow: 0 2px 0 var(--t-accent);
+  background: color-mix(in srgb, var(--t-accent) 20%, transparent);
+}

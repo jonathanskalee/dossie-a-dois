@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#12141a"/>
+  <g transform="translate(0 -14)">
+  <defs>
+    <clipPath id="lenteA"><circle cx="205" cy="215" r="92"/></clipPath>
+    <clipPath id="lenteB"><circle cx="307" cy="215" r="92"/></clipPath>
+  </defs>
+
+  <!-- cabos das lupas, abrindo em V -->
+  <line x1="139" y1="281" x2="76" y2="352" stroke="#d9a441" stroke-width="34" stroke-linecap="round"/>
+  <line x1="373" y1="281" x2="436" y2="352" stroke="#d9a441" stroke-width="34" stroke-linecap="round"/>
+
+  <!-- a interseção acesa: onde os dois olhares se cruzam -->
+  <g clip-path="url(#lenteA)">
+    <circle cx="307" cy="215" r="92" fill="#f5efe2" opacity="0.92"/>
+  </g>
+
+  <!-- aros das lupas -->
+  <circle cx="205" cy="215" r="92" fill="none" stroke="#d9a441" stroke-width="24"/>
+  <circle cx="307" cy="215" r="92" fill="none" stroke="#d9a441" stroke-width="24"/>
+
+  <!-- pingo de verdade na interseção -->
+  <circle cx="256" cy="215" r="17" fill="#12141a"/>
+</g>
+</svg>

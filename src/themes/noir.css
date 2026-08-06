@@ -1,0 +1,35 @@
+/**
+ * Tema NOIR — anos 1940, boate enfumaçada.
+ * Preto profundo, papel envelhecido, carmim de batom e cinza-fumaça.
+ */
+:root[data-theme="noir"] {
+  --t-bg: #0b0b0d;
+  --t-surface: #16161b;
+  --t-paper: #e9e2cf;
+  --t-ink: #1b1613;
+  --t-fg: #e6e2d8;
+  --t-accent: #c22436;
+  --t-accent2: #9aa0a6;
+  --t-ok: #4a9d6e;
+  --t-danger: #e05252;
+  --t-muted: #82838c;
+  --t-font-display: "Bebas Neue", "Inter", sans-serif;
+  --t-font-body: "Libre Baskerville", Georgia, serif;
+  /* fumaça subindo + grão de filme */
+  --t-grain:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 255, 255, 0.05), transparent 70%),
+    repeating-linear-gradient(0deg, transparent 0 2px, rgba(255, 255, 255, 0.012) 2px 3px);
+}
+
+[data-theme="noir"] .dossier {
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    0 14px 30px rgba(0, 0, 0, 0.55);
+  background-image: linear-gradient(160deg, rgba(0, 0, 0, 0.05), transparent 40%);
+}
+
+[data-theme="noir"] .theme-title {
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}

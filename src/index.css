@@ -1,0 +1,225 @@
+@import "tailwindcss";
+@import "./themes/noir.css";
+@import "./themes/cozy.css";
+@import "./themes/tech.css";
+@import "./themes/occult.css";
+
+/**
+ * Tokens semânticos do Dossiê a Dois.
+ *
+ * `@theme inline` faz as utilities do Tailwind resolverem para variáveis
+ * trocáveis em runtime: cada tema (arquivo em themes/) só redefine as `--t-*`
+ * num bloco [data-theme="..."]. Componentes usam SEMPRE o vocabulário
+ * semântico (bg-surface, text-ink, font-display) — zero código por tema no TSX.
+ */
+@theme inline {
+  --color-bg: var(--t-bg);
+  --color-surface: var(--t-surface);
+  --color-paper: var(--t-paper);
+  --color-ink: var(--t-ink);
+  --color-fg: var(--t-fg);
+  --color-accent: var(--t-accent);
+  --color-accent2: var(--t-accent2);
+  --color-ok: var(--t-ok);
+  --color-danger: var(--t-danger);
+  --color-muted: var(--t-muted);
+  --font-display: var(--t-font-display);
+  --font-body: var(--t-font-body);
+}
+
+/* Tema neutro da "sala de arquivo" (título e seleção de casos). */
+:root {
+  --t-bg: #12141a;
+  --t-surface: #1a1d26;
+  --t-paper: #f5efe2;
+  --t-ink: #241d14;
+  --t-fg: #e8e6df;
+  --t-accent: #d9a441;
+  --t-accent2: #7f96b8;
+  --t-ok: #4a9d6e;
+  --t-danger: #cf5252;
+  --t-muted: #8b8fa0;
+  --t-font-display: "Inter", system-ui, sans-serif;
+  --t-font-body: "Inter", system-ui, sans-serif;
+  --t-grain: none;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--t-bg);
+  color: var(--t-fg);
+  font-family: var(--t-font-body);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  transition: background-color 600ms ease;
+}
+
+/* Textura de fundo por tema (grain, vinheta…), definida em --t-grain. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: var(--t-grain);
+  background-size: var(--t-grain-size, auto);
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+}
+
+:focus-visible {
+  outline: 3px solid var(--t-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* -------- peças de linguagem visual -------- */
+
+/* Cartão de papel do dossiê (depoimentos, laudos, fichas). */
+.dossier {
+  background: var(--t-paper);
+  color: var(--t-ink);
+  border-radius: 14px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+/* Painel translúcido sobre o fundo. */
+.panel {
+  background: var(--t-surface);
+  border: 1px solid color-mix(in srgb, var(--t-accent) 22%, transparent);
+  border-radius: 16px;
+}
+
+.hairline {
+  height: 1px;
+  background: color-mix(in srgb, var(--t-accent) 45%, transparent);
+}
+
+/* Destaque tocável de alegação/fato dentro da prosa. */
+.mark-claim,
+.mark-fact {
+  border-radius: 4px;
+  padding: 1px 3px;
+  font-weight: 600;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.mark-claim {
+  background: color-mix(in srgb, var(--t-accent) 26%, transparent);
+  box-shadow: 0 2px 0 var(--t-accent);
+}
+.mark-fact {
+  background: color-mix(in srgb, var(--t-accent2) 30%, transparent);
+  box-shadow: 0 2px 0 var(--t-accent2);
+}
+
+/* Números tabulares para tempos e placares. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------- animações (orçamento curto, com saída de emergência) -------- */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.anim-fade-up {
+  animation: fadeUp 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  70% {
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.anim-pop {
+  animation: popIn 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* Carimbo batendo no papel (handoff, acusação). */
+@keyframes stampIn {
+  0% {
+    opacity: 0;
+    transform: scale(1.6) rotate(-14deg);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(0.96) rotate(-8deg);
+  }
+  100% {
+    transform: scale(1) rotate(-8deg);
+  }
+}
+.anim-stamp {
+  animation: stampIn 420ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+/* Par errado na mesa. */
+@keyframes shakeX {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
+}
+.anim-shake {
+  animation: shakeX 360ms ease both;
+}
+
+/* Revelação de contradição. */
+@keyframes revealGlow {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--t-accent) 55%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0 26px transparent;
+  }
+}
+.anim-reveal {
+  animation: revealGlow 900ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
