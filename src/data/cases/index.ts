@@ -18,6 +18,7 @@ export const CASE_SUMMARIES: CaseSummary[] = [
     theme: "noir",
     difficulty: 2,
     estimatedMinutes: 40,
+    cover: "/art/caso01Noir/helena.webp",
   },
   {
     id: "caso02-cozy",

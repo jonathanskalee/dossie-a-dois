@@ -11,9 +11,10 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["icon.svg"],
       workbox: {
-        // O padrão do workbox não cobre fontes — sem isto o app instalado
-        // perderia as fontes dos temas justamente quando está offline.
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+        // O padrão do workbox não cobre fontes nem os retratos — sem isto o
+        // app instalado perderia as fontes dos temas e a arte dos suspeitos
+        // justamente quando está offline.
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2}"],
       },
       manifest: {
         name: "Dossiê a Dois",

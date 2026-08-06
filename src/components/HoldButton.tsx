@@ -42,7 +42,7 @@ export function HoldButton(props: { label: string; onComplete: () => void }) {
       onPointerLeave={cancel}
       onPointerCancel={cancel}
       onContextMenu={(e) => e.preventDefault()}
-      className="relative min-h-16 w-full touch-none select-none overflow-hidden rounded-2xl bg-accent font-display text-xl font-semibold text-bg shadow-[0_6px_0_rgba(0,0,0,.35)]"
+      className="relative min-h-16 w-full touch-none select-none overflow-hidden rounded-2xl bg-accent font-display text-xl tracking-wide text-bg shadow-[0_6px_0_rgba(0,0,0,.35)]"
     >
       {/* preenchimento do progresso */}
       <span

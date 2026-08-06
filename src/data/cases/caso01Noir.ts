@@ -33,6 +33,7 @@ const caso: Case = {
       name: "Helena Duarte",
       role: "a cantora da casa",
       portraitEmoji: "🎤",
+      portrait: "/art/caso01Noir/helena.webp",
       description:
         "A estrela da Azul Meia-Noite. Voz de veludo, contrato com o rádio à vista — e olhos vermelhos que o rímel não disfarça.",
       interviews: [
@@ -91,6 +92,7 @@ const caso: Case = {
       name: "Vicente Sarmento",
       role: "o sócio",
       portraitEmoji: "🎩",
+      portrait: "/art/caso01Noir/vicente.webp",
       description:
         "Sócio de Otávio há doze anos. Terno impecável, sorriso pronto, unhas roídas até a carne.",
       interviews: [
@@ -146,6 +148,7 @@ const caso: Case = {
       name: "Salomão “Sal” Ferraz",
       role: "o barman",
       portraitEmoji: "🍸",
+      portrait: "/art/caso01Noir/sal.webp",
       description:
         "Vinte anos atrás do balcão da Azul Meia-Noite. Sabe o segredo de todo mundo e o drinque de cada um.",
       interviews: [
@@ -189,6 +192,7 @@ const caso: Case = {
       name: "Dora Meireles",
       role: "a esposa",
       portraitEmoji: "🖤",
+      portrait: "/art/caso01Noir/dora.webp",
       description:
         "Casada com Otávio há quinze anos, separada de fato há um. Luto fechado, aliança no dedo, advogado ao telefone.",
       interviews: [
@@ -247,6 +251,7 @@ const caso: Case = {
       name: "Íris Camargo",
       role: "a cigarreira",
       portraitEmoji: "🚬",
+      portrait: "/art/caso01Noir/iris.webp",
       description:
         "Vende cigarros mesa a mesa desde os dezessete. Ninguém repara nela — por isso ela repara em tudo.",
       interviews: [

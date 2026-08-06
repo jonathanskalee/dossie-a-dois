@@ -2,6 +2,8 @@ import { useGame } from "../store/gameStore";
 import { visibleInterviews, visibleSuspects } from "../store/progress";
 import { SegmentText } from "../components/SegmentText";
 import { Pill, RoleBadge, TopBar } from "../components/ui";
+import { Portrait } from "../components/Portrait";
+import { IconFrasco, IconMesa } from "../components/icons";
 
 /** Rodapé fixo com as saídas do turno. */
 function TurnFooter() {
@@ -12,16 +14,16 @@ function TurnFooter() {
         <button
           type="button"
           onClick={() => passTo("perito")}
-          className="min-h-13 flex-1 rounded-2xl border border-accent2/50 px-4 font-display text-lg font-semibold text-accent2 active:bg-surface"
+          className="inline-flex min-h-13 flex-1 items-center justify-center gap-2 rounded-2xl border border-accent2/50 px-4 font-display text-lg text-accent2 active:bg-surface"
         >
-          🔬 Passar ao Perito
+          <IconFrasco /> Passar ao Perito
         </button>
         <button
           type="button"
           onClick={() => passTo("board")}
-          className="min-h-13 flex-1 rounded-2xl bg-accent px-4 font-display text-lg font-semibold text-bg shadow-[0_4px_0_rgba(0,0,0,.3)] active:translate-y-0.5 active:shadow-[0_2px_0_rgba(0,0,0,.3)]"
+          className="inline-flex min-h-13 flex-1 items-center justify-center gap-2 rounded-2xl bg-accent px-4 font-display text-lg text-bg shadow-[0_4px_0_rgba(0,0,0,.3)] active:translate-y-0.5 active:shadow-[0_2px_0_rgba(0,0,0,.3)]"
         >
-          🤝 Ir para a Mesa
+          <IconMesa /> Ir para a Mesa
         </button>
       </div>
     </footer>
@@ -50,15 +52,18 @@ export function DetectiveScreen() {
     return (
       <main className="mx-auto min-h-dvh max-w-2xl px-5 pb-36">
         <TopBar title={suspect.name} onBack={closeInterview} right={<RoleBadge role="detective" />} />
-        <div className="dossier anim-pop mt-2 p-6">
-          <p className="text-sm font-semibold uppercase tracking-wider opacity-60">Você pergunta:</p>
-          <p className="mt-1 text-lg font-semibold">“{interview.question}”</p>
-          <div className="hairline my-4" />
+        {/* o depoimento é uma transcrição: pergunta datilografada, resposta em prosa */}
+        <div className="dossier anim-pop mt-2 p-6 sm:p-8">
+          <p className="font-display text-xs uppercase tracking-[0.28em] opacity-55">Transcrição do interrogatório</p>
+          <p className="mt-3 border-l-2 border-ink/25 pl-4 text-lg font-semibold leading-snug">
+            “{interview.question}”
+          </p>
+          <div className="hairline my-5" />
           <SegmentText segments={interview.answer} markClass="mark-claim" />
-          <div className="hairline my-4" />
-          <p className="text-sm opacity-70">
+          <div className="hairline my-5" />
+          <p className="text-sm leading-relaxed opacity-70">
             Os trechos <mark className="mark-claim">destacados</mark> são <strong>alegações</strong> — o que{" "}
-            {suspect.name.split(" ")[0]} AFIRMA. Conte ao seu parceiro. Se alguma prova desmentir, vocês a
+            {suspect.name.split(" ")[0]} afirma. Conte ao seu parceiro. Se alguma prova desmentir, vocês a
             registram na Mesa.
           </p>
         </div>
@@ -73,19 +78,18 @@ export function DetectiveScreen() {
     return (
       <main className="mx-auto min-h-dvh max-w-2xl px-5 pb-36">
         <TopBar title="Interrogatório" onBack={closeSuspect} right={<RoleBadge role="detective" />} />
-        <div className="panel anim-fade-up mt-2 flex items-center gap-4 p-5">
-          <span className="flex size-16 items-center justify-center rounded-full bg-accent/15 text-4xl" aria-hidden>
-            {suspect.portraitEmoji}
-          </span>
-          <div>
-            <h2 className="font-display text-2xl font-semibold text-fg">{suspect.name}</h2>
+        {/* a ficha do suspeito: retrato, identificação e o que se sabe dele */}
+        <div className="panel anim-fade-up mt-2 flex gap-5 p-5">
+          <Portrait suspect={suspect} size="lg" />
+          <div className="min-w-0 flex-1">
+            <h2 className="font-display text-2xl leading-tight text-fg">{suspect.name}</h2>
             <p className="text-muted">{suspect.role}</p>
+            <p className="mt-3 leading-relaxed text-fg/90">{suspect.description}</p>
           </div>
         </div>
-        <p className="mt-4 text-fg/90">{suspect.description}</p>
 
-        <h3 className="mt-6 font-display text-lg font-semibold uppercase tracking-wider text-muted">Perguntas</h3>
-        <ul className="mt-2 flex flex-col gap-3">
+        <h3 className="mt-7 font-display text-sm uppercase tracking-[0.28em] text-muted">Perguntas</h3>
+        <ul className="mt-3 flex flex-col gap-3">
           {interviews.map((i) => {
             const read = readInterviews.has(`${suspect.id}:${i.id}`);
             return (
@@ -93,7 +97,7 @@ export function DetectiveScreen() {
                 <button
                   type="button"
                   onClick={() => openInterview(i.id)}
-                  className="panel w-full p-4 text-left active:scale-[.99]"
+                  className={`panel w-full p-4 text-left transition active:scale-[.99] ${read ? "opacity-70" : ""}`}
                 >
                   <span className="flex items-center justify-between gap-3">
                     <span className="text-lg text-fg">“{i.question}”</span>
@@ -120,28 +124,35 @@ export function DetectiveScreen() {
         {suspects.map((s, i) => {
           const vis = visibleInterviews(c, s, unlockedLeads);
           const readCount = vis.filter((iv) => readInterviews.has(`${s.id}:${iv.id}`)).length;
+          const done = readCount === vis.length;
           return (
             <li key={s.id} className="anim-fade-up" style={{ animationDelay: `${i * 70}ms` }}>
+              {/* a ficha: a arte ocupa o topo, os dados ficam embaixo */}
               <button
                 type="button"
                 onClick={() => openSuspect(s.id)}
-                className="panel w-full p-5 text-left active:scale-[.98]"
+                className="panel w-full overflow-hidden text-left active:scale-[.98]"
               >
-                <div className="flex items-center gap-4">
-                  <span className="flex size-14 items-center justify-center rounded-full bg-accent/15 text-3xl" aria-hidden>
-                    {s.portraitEmoji}
+                <span className="relative block">
+                  <Portrait suspect={s} size="banner" />
+                  {/* a foto se dissolve no cartão em vez de terminar em corte seco */}
+                  {s.portrait && (
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-surface to-transparent"
+                    />
+                  )}
+                </span>
+                <span className="block p-4">
+                  <span className="block truncate font-display text-xl text-fg">{s.name}</span>
+                  <span className="block truncate text-sm text-muted">{s.role}</span>
+                  <span className="mt-3 flex items-center justify-between gap-2">
+                    <span className="tabular text-sm text-muted">
+                      {readCount} de {vis.length} perguntas feitas
+                    </span>
+                    {!done && <Pill>nova</Pill>}
                   </span>
-                  <div className="min-w-0 flex-1">
-                    <h2 className="truncate font-display text-xl font-semibold text-fg">{s.name}</h2>
-                    <p className="truncate text-sm text-muted">{s.role}</p>
-                  </div>
-                </div>
-                <div className="mt-3 flex items-center justify-between text-sm text-muted">
-                  <span>
-                    {readCount}/{vis.length} perguntas feitas
-                  </span>
-                  {readCount < vis.length && <Pill>há perguntas novas</Pill>}
-                </div>
+                </span>
               </button>
             </li>
           );

@@ -3,6 +3,7 @@
  * (bg-surface, text-ink, border-accent…) — o tema ativo faz o resto.
  */
 import type { ReactNode } from "react";
+import { IconCoracaoDigital, IconFrasco, IconLupa } from "./icons";
 
 export function BigButton(props: {
   children: ReactNode;
@@ -23,7 +24,7 @@ export function BigButton(props: {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`min-h-14 rounded-2xl px-6 font-display text-xl font-semibold transition-transform disabled:opacity-40 disabled:shadow-none disabled:translate-y-0 ${skin} ${className}`}
+      className={`min-h-14 rounded-2xl px-6 font-display text-xl tracking-wide transition-transform disabled:translate-y-0 disabled:opacity-40 disabled:shadow-none ${skin} ${className}`}
     >
       {children}
     </button>
@@ -57,7 +58,9 @@ export function Pill(props: { children: ReactNode; tone?: "accent" | "accent2" |
         ? "bg-muted/20 text-muted"
         : "bg-accent/20 text-accent";
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-semibold ${tone} ${props.className ?? ""}`}>
+    <span
+      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-sm font-semibold ${tone} ${props.className ?? ""}`}
+    >
       {props.children}
     </span>
   );
@@ -67,22 +70,32 @@ export function RoleBadge(props: { role: "detective" | "perito"; big?: boolean }
   const detective = props.role === "detective";
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full font-display font-semibold ${
+      className={`inline-flex items-center gap-2 rounded-full font-display tracking-wide ${
         detective ? "bg-accent/20 text-accent" : "bg-accent2/20 text-accent2"
-      } ${props.big ? "px-5 py-2 text-2xl" : "px-3 py-1 text-base"}`}
+      } ${props.big ? "px-6 py-2.5 text-2xl" : "px-3 py-1 text-base"}`}
     >
-      <span aria-hidden>{detective ? "🕵️" : "🔬"}</span>
+      {detective ? <IconLupa /> : <IconFrasco />}
       {detective ? "Detetive" : "Perito"}
     </span>
   );
 }
 
+/**
+ * Nota da dupla: corações de impressão digital carimbados, um a um,
+ * cada qual com a inclinação torta de um carimbo de verdade.
+ */
 export function Stars(props: { n: 1 | 2 | 3 | 4 | 5 }) {
+  const tilt = [-7, 4, -3, 6, -5];
   return (
-    <div className="flex justify-center gap-1 text-4xl" aria-label={`${props.n} de 5 estrelas`}>
+    <div className="flex items-center justify-center gap-2" aria-label={`${props.n} de 5 corações`}>
       {[1, 2, 3, 4, 5].map((i) => (
-        <span key={i} className={i <= props.n ? "" : "opacity-25 grayscale"} aria-hidden>
-          ⭐
+        <span
+          key={i}
+          aria-hidden
+          className={i <= props.n ? "anim-stamp-flat text-accent" : "text-muted opacity-30"}
+          style={{ rotate: `${tilt[i - 1]}deg`, animationDelay: `${i * 120}ms` }}
+        >
+          <IconCoracaoDigital className="size-12" filled={i <= props.n} />
         </span>
       ))}
     </div>

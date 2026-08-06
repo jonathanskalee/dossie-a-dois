@@ -56,8 +56,14 @@ export interface Suspect {
   name: string;
   /** Papel na história: "a governanta", "o sócio". */
   role: string;
-  /** Retrato v1: emoji em moldura temática. */
+  /** Emoji de reserva: aparece enquanto o caso não tem retrato ilustrado. */
   portraitEmoji: string;
+  /**
+   * Retrato ilustrado, caminho absoluto servido de public/
+   * (ex.: "/art/caso01Noir/helena.webp"). Gerado por `npm run art` a partir
+   * de `art-src/<caso>/<id do suspeito>.png`.
+   */
+  portrait?: string;
   description: string;
   interviews: Interview[];
 }
@@ -150,4 +156,9 @@ export interface CaseSummary {
   theme: ThemeId;
   difficulty: 1 | 2 | 3;
   estimatedMinutes: number;
+  /**
+   * Foto presa na pasta do arquivo de casos — normalmente o retrato de uma
+   * figura marcante do caso. Sem ela, a pasta mostra o emoji do tema.
+   */
+  cover?: string;
 }

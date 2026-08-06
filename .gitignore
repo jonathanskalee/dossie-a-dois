@@ -4,3 +4,6 @@ dev-dist
 *.local
 .DS_Store
 *.tsbuildinfo
+
+# Rascunhos e variantes descartadas da arte: ficam no disco, fora do repo.
+art-src/_*

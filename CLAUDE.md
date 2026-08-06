@@ -14,9 +14,10 @@ Zustand 5 + vite-plugin-pwa + Vitest. Fontes self-hosted via @fontsource.
 Mesma base do app irmão `../Mimica-na-regua`.
 
 - `npm run dev` — dev server com `--host` (testar no tablet pela rede local)
-- `npm test` — 32 testes (integridade dos casos + lógica pura)
+- `npm test` — 36 testes (integridade dos casos + lógica pura)
 - `npm run build` — tsc + vite build (dist/)
-- `npm run icons` — regenera ícones PWA de `scripts/gen-icons.mjs`
+- `npm run icons` — regenera ícones PWA e `logo.svg` de `scripts/gen-icons.mjs`
+- `npm run art` — converte `art-src/` em webp 512px otimizado em `public/art/`
 
 ## Regras da casa
 
@@ -28,6 +29,41 @@ Mesma base do app irmão `../Mimica-na-regua`.
 - Componentes usam SÓ tokens semânticos (`bg-surface`, `text-ink`,
   `font-display`…). Cores/fontes por tema vivem em `src/themes/*.css`
   (blocos `[data-theme="..."]`). Zero código por tema em TSX.
+- Ícones de interface vêm de `src/components/icons.tsx` (SVG, `currentColor`).
+  Emoji só como *conteúdo* (retrato de reserva de suspeito), nunca como ícone
+  de UI.
+- Nada de `font-semibold` sobre `font-display`: as faces de display têm um
+  peso só e o negrito sintético as engorda (`.font-display` já desliga
+  `font-synthesis-weight`).
+
+## Linguagem visual
+
+A marca é o **coração de impressão digital** (SVG puro em
+`scripts/gen-icons.mjs`, que gera os ícones do PWA e `public/logo.svg`).
+
+O elemento-assinatura é o **carimbo de tinta** (`.stamp` em `index.css`):
+torto, borda dupla, desgaste irregular. Aparece na situação do caso, na
+passagem de turno, na contradição revelada e na acusação definitiva — e em
+mais lugar nenhum. A inclinação usa a propriedade `rotate`, não `transform`,
+porque a animação de carimbo anima o `transform`.
+
+A casca neutra (título e arquivo de casos) é a sala de arquivo: máquina de
+escrever (Special Elite), pastas de papel manilha (`.folder*`) e a foto
+presa na pasta (`.folder-photo`). Cada caso troca tudo isso pelo seu tema.
+
+## Arte (retratos e capas)
+
+Originais grandes ficam em `art-src/<caso>/<id do suspeito>.png`, **fora de
+`public/`** (o precache do PWA rejeita arquivos acima de 2 MiB). `npm run art`
+converte para `public/art/<caso>/<id>.webp` (512×512, ~20 kB). Pastas
+começadas por `_` são ignoradas.
+
+No dado do caso: `portrait: "/art/<caso>/<id>.webp"` no suspeito e `cover` no
+resumo em `cases/index.ts`. Ambos são opcionais — sem eles o jogo cai no
+`portraitEmoji`, e o cartão do suspeito encolhe a faixa de imagem em vez de
+fingir uma foto vazia. Um caminho quebrado derruba `npm test`.
+
+Prompts de geração das imagens: `docs/prompts-imagens.md`.
 
 ## Casos (conteúdo)
 

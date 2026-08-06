@@ -4,6 +4,8 @@
  * Caso novo entra no registro → entra automaticamente aqui. Estes testes são a
  * ferramenta de autoria: escreveu caso, rodou `npm test`, corrigiu o que caiu.
  */
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadAllCases, CASE_SUMMARIES } from "./index";
 import { validateCase } from "../validateCase";
@@ -44,5 +46,14 @@ describe.each(cases.map((c) => [c.id, c] as const))("caso %s", (_id, c) => {
     expect(c.solution.minContradictions).toBeGreaterThanOrEqual(1);
     expect(c.solution.minContradictions).toBeLessThanOrEqual(c.contradictions.length);
     expect(c.suspects.some((s) => s.id === c.solution.culpritId)).toBe(true);
+  });
+
+  // Um caminho errado em `portrait` não quebra nada em runtime: só some a
+  // arte. Aqui ele quebra o teste, com o id do suspeito.
+  it("todo retrato ilustrado existe em public/", () => {
+    const faltando = c.suspects
+      .filter((s) => s.portrait && !existsSync(join(process.cwd(), "public", s.portrait)))
+      .map((s) => `${s.id} → ${s.portrait}`);
+    expect(faltando, "retratos ausentes").toEqual([]);
   });
 });
