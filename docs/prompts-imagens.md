@@ -57,6 +57,9 @@ Paletas por tema:
   daylight from a window, spring flowers, calm and homely`
 - **tech** — `cold modern palette: deep navy and slate, pale blue monitor
   glow on the face, sharp cyan rim light, night office`
+- **folia** — `carnival workshop at night: deep violet shadows, hot magenta and
+  teal work lights, gold glitter dust hanging in the air, half-built floats
+  looming in the dark background`
 - **occult** — `gothic candlelit palette: violet-black shadows, aged gold and
   parchment tones, single candle flame as the light source, early 1900s`
 
@@ -314,6 +317,75 @@ Paletas por tema:
 
 ---
 
+# CASO 05 — Ensaio Geral (folia, barracão da Unidos do Cruzeiro, hoje)
+
+## Elenco
+
+| Personagem | Idade | Pele | Cabelo | Porte | Traço exclusivo |
+|---|---|---|---|---|---|
+| Neide | 58 | negra retinta | alisado em coque alto laqueado | corpulenta, imponente | **vestido vermelho** (é canônico: aparece no story) |
+| Jorjão | 55 | negra média | cabeça raspada + barba grisalha cheia | ombros enormes, pescoço largo | barba grisalha cerrada |
+| Dandara | 29 | parda clara | cachos volumosos castanho-claros com mechas douradas | esguia, postura de bailarina | os cachos com mechas |
+| Seu Vavá | 67 | branca muito castigada de sol | branco fino e desalinhado, bigode branco | magro e seco, encurvado | óculos na ponta do nariz, mãos manchadas de tinta |
+| Rick | 34 | branca bronzeada de barco | castanho-claro com gel | magro, ombros estreitos | óculos escuros na cabeça |
+
+> Três gerações e cinco tipos físicos sem nada em comum. O vestido vermelho de
+> Neide **não é opcional** — o caso depende dele para ela ser reconhecida
+> desfocada no vídeo.
+
+### Neide Sampaio — a presidente → `neide.png`
+> A 58-year-old Black Brazilian woman, president of a samba school. Broad
+> strong face with full cheeks and a firm jaw, deep dark brown skin, relaxed
+> black hair pulled up into a high lacquered bun, sharply drawn eyebrows, dark
+> wine lipstick, large gold hoop earrings, heavy-set and imposing with square
+> shoulders. She wears a **red dress** and stands with her arms crossed in the
+> doorway of an office at the back of a float workshop. Frontal view, chin
+> raised, in complete command of the room.
+
+### Jorjão — o mestre de bateria → `jorjao.png`
+> A 55-year-old Black Brazilian samba drum master. Square face with a heavy
+> jaw, medium brown skin, completely shaved head, thick full grey beard,
+> small deep-set eyes with laugh lines, enormous shoulders and a wide neck,
+> a thick gold chain over a polo shirt with the school crest. A whistle hangs
+> from his lips on a cord and a drumstick is tucked behind his ear.
+> Three-quarter view, sweating, mid-rehearsal, drums blurred behind him.
+
+### Dandara Ribeiro — a porta-bandeira → `dandara.png`
+> A 29-year-old light-brown-skinned Brazilian flag bearer. Fine oval face with
+> a pointed chin and high cheekbones, voluminous curly light-brown hair with
+> golden highlights, large dark eyes with sharp winged eyeliner, full lips,
+> slender dancer's build with an impossibly upright posture and a long neck.
+> She wears a rehearsal costume with a sequined bodice and holds a phone in one
+> hand, mid-selfie. Three-quarter view, glancing sideways at something offstage.
+
+### Seu Vavá — o aderecista → `vava.png`
+> A 67-year-old white Brazilian float craftsman with deeply sun-damaged skin.
+> Thin dry face carved with wrinkles, fine white unkempt hair, thick white
+> moustache, reading glasses perched on the tip of his nose, pale watery eyes
+> looking over the rims, wiry and stooped. Huge calloused hands stained with
+> glue and paint, holding a bent piece of iron rod. He wears a paint-spattered
+> work apron. Near profile turning to the viewer, unimpressed. Feathers and
+> foam sculptures on shelves behind him.
+
+### Rick Aloisio — o patrocinador → `rick.png`
+> A 34-year-old white Brazilian heir to a drinks company, boat-tanned. Long
+> narrow face with a trimmed three-day stubble, light-brown hair combed back
+> with gel, thin lips, pale grey eyes, slim with narrow shoulders. Sunglasses
+> pushed up on his head, open linen shirt, an expensive watch. He stands
+> awkwardly in a float workshop at night, clearly not dressed for it.
+> Three-quarter view, checking his phone, wanting to leave.
+
+### Capa do caso → `capa.png`
+> Oil painting illustration, samba school float workshop at night after
+> everyone has left, a half-finished parade float towering in the dark, a
+> heavy sculpted piece fallen on the concrete floor beside a steel column
+> winch with its cable still intact and coiled, a single work lamp and magenta
+> and teal light spilling from above, gold glitter dust hanging in the air,
+> deep violet shadows, visible brush strokes, no people, no text, 16:10
+> landscape
+
+---
+
 # Extras
 
 ### Tela de título → salvar como `art-src/geral/titulo.png` (16:10)
@@ -345,5 +417,10 @@ também gera `public/logo.svg`. Para mudar a marca, edite o script.
    o teste com o id do suspeito.
 
 **Situação:** caso 01 tem os 5 retratos ligados; Dora, Íris e Sal valem
-refazer com as fichas novas. Casos 02, 03 e 04 e todas as capas estão
-pendentes.
+refazer com as fichas novas. **Casos 02, 03, 04 e 05 não têm nenhuma arte** —
+todos rodam com o emoji de reserva, e o cartão de suspeito encolhe a faixa de
+imagem quando não há retrato, então não fica buraco na tela. As capas dos
+cinco casos também estão pendentes (só o caso 01 tem `cover`).
+
+A pasta de cada caso segue o nome do arquivo de dados: `art-src/caso01Noir/`,
+`art-src/caso05Folia/`, e assim por diante.
