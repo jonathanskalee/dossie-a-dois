@@ -154,6 +154,41 @@ export function seenFacts(c: Case, progress: Progress) {
   return out;
 }
 
+/**
+ * O que a Mesa ainda mostra.
+ *
+ * Uma fala ou prova sai da mesa quando TODA contradição de que ela participa
+ * já foi encontrada — não basta ter sido usada uma vez. O schema permite a
+ * mesma fala em duas contradições (`validateCase` só proíbe o par repetido),
+ * e removê-la na primeira tornaria a segunda impossível de registrar.
+ *
+ * Itens que não participam de contradição nenhuma (as pistas falsas) nunca
+ * saem: são eles que mantêm o palheiro de pé.
+ */
+function aindaRende(contradicoesDoItem: Contradiction[], achadas: Set<string>): boolean {
+  return contradicoesDoItem.length === 0 || contradicoesDoItem.some((k) => !achadas.has(k.id));
+}
+
+export function boardClaims(c: Case, progress: Progress) {
+  const achadas = new Set(progress.foundContradictions);
+  return heardClaims(c, progress).filter((cl) =>
+    aindaRende(
+      c.contradictions.filter((k) => k.claimId === cl.id),
+      achadas
+    )
+  );
+}
+
+export function boardFacts(c: Case, progress: Progress) {
+  const achadas = new Set(progress.foundContradictions);
+  return seenFacts(c, progress).filter((f) =>
+    aindaRende(
+      c.contradictions.filter((k) => k.factId === f.id),
+      achadas
+    )
+  );
+}
+
 export type PairResult =
   | { kind: "correct"; contradiction: Contradiction; newLeads: Lead[] }
   | { kind: "wrong" }

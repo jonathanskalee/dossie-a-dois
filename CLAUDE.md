@@ -72,6 +72,12 @@ Um caso é **dado puro** em `src/data/cases/casoNN*.ts` seguindo o schema de
 alguma pista (lead) começa oculto; o resto é visível desde o início.
 Contradição = par `claimId` × `factId`; acerto desbloqueia leads.
 
+Ao acertar, a fala e a prova **saem da Mesa** e passam a viver só no caderno —
+mas só quando TODA contradição de que participam já foi achada. O schema
+permite a mesma fala em duas contradições (`validateCase` só proíbe o par
+repetido), e é `boardClaims`/`boardFacts` em `progress.ts` que garante isso.
+Itens que não entram em contradição nenhuma (as pistas falsas) nunca saem.
+
 **Caso novo:** criar o arquivo, registrar resumo + loader em
 `src/data/cases/index.ts`, rodar `npm test`. Os testes de integridade
 (`casesIntegrity.test.ts`) validam referências e simulam a solução completa

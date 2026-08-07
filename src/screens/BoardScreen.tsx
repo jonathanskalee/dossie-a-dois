@@ -9,7 +9,7 @@
  * resumo do que o casal está prestes a afirmar em voz alta.
  */
 import { useGame } from "../store/gameStore";
-import { heardClaims, seenFacts } from "../store/progress";
+import { boardClaims, boardFacts } from "../store/progress";
 import { hintFor } from "../store/hints";
 import { BigButton, Meter, TopBar } from "../components/ui";
 import { Notebook } from "../components/Notebook";
@@ -48,8 +48,8 @@ export function BoardScreen() {
   const goAccusation = useGame((s) => s.goAccusation);
   if (!c) return null;
 
-  const claims = heardClaims(c, progress);
-  const facts = seenFacts(c, progress);
+  const claims = boardClaims(c, progress);
+  const facts = boardFacts(c, progress);
   const found = progress.foundContradictions.length;
   const total = c.contradictions.length;
   const canAccuse = found >= c.solution.minContradictions;
@@ -106,6 +106,13 @@ export function BoardScreen() {
             </>
           )}
         </p>
+        {/* aparece junto com a primeira contradição — no exato momento em que
+            os dois cartões somem da mesa, que é quando a dúvida surge */}
+        {found > 0 && (
+          <p className="mt-1.5 text-sm text-muted/75">
+            O que já foi cruzado sai da mesa e fica guardado no caderno.
+          </p>
+        )}
       </div>
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
@@ -116,7 +123,7 @@ export function BoardScreen() {
           </h2>
           {claims.length === 0 && (
             <p className="rounded-xl border border-dashed border-muted/30 p-4 text-sm leading-relaxed text-muted">
-              Nada ainda. O Detetive precisa interrogar alguém e trazer as alegações para cá.
+              A mesa está sem falas em aberto. O Detetive precisa interrogar mais alguém.
             </p>
           )}
           <ul className="flex flex-col gap-2">
@@ -149,7 +156,7 @@ export function BoardScreen() {
           </h2>
           {facts.length === 0 && (
             <p className="rounded-xl border border-dashed border-muted/30 p-4 text-sm leading-relaxed text-muted">
-              Nada ainda. O Perito precisa examinar as provas e trazer os fatos para cá.
+              A mesa está sem provas em aberto. O Perito precisa examinar mais alguma.
             </p>
           )}
           <ul className="flex flex-col gap-2">

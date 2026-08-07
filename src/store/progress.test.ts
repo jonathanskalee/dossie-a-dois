@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
+import type { Case } from "../data/types";
 import { lab } from "./__fixtures__/labCase";
 import {
+  boardClaims,
+  boardFacts,
   claimIndex,
   emptyProgress,
   factIndex,
@@ -64,6 +67,60 @@ describe("mesa de contradições", () => {
     expect(tryContradiction(lab, p, "cl-fora", "f-foto").kind).toBe("repeatWrong");
     p.foundContradictions.push("k1");
     expect(tryContradiction(lab, p, "cl-fora", "f-recibo").kind).toBe("alreadyFound");
+  });
+});
+
+describe("o que a mesa ainda mostra", () => {
+  function mesaCheia() {
+    const p = emptyProgress();
+    p.unlockedLeads.add("l1");
+    p.readInterviews.add("ana:ana-1");
+    p.readInterviews.add("beto:beto-1");
+    p.viewedEvidence.add("ev-recibo");
+    p.viewedEvidence.add("ev-foto");
+    return p;
+  }
+
+  it("antes de achar nada, mostra tudo o que foi ouvido e visto", () => {
+    const p = mesaCheia();
+    expect(boardClaims(lab, p).map((c) => c.id)).toEqual(["cl-fora", "cl-nada"]);
+    expect(boardFacts(lab, p).map((f) => f.id)).toEqual(["f-recibo", "f-foto"]);
+  });
+
+  it("a fala e a prova de uma contradição achada saem da mesa", () => {
+    const p = mesaCheia();
+    p.foundContradictions.push("k1");
+    expect(boardClaims(lab, p).map((c) => c.id)).toEqual(["cl-nada"]);
+    expect(boardFacts(lab, p).map((f) => f.id)).toEqual(["f-foto"]);
+  });
+
+  it("fala usada em duas contradições fica enquanto uma delas não for achada", () => {
+    // O schema permite reuso; removê-la na primeira tornaria a segunda
+    // impossível de registrar.
+    const reusa: Case = {
+      ...lab,
+      contradictions: [
+        lab.contradictions[0],
+        { ...lab.contradictions[1], id: "k3", claimId: "cl-fora", unlocks: [] },
+      ],
+    };
+    const naMesa = (p: ReturnType<typeof mesaCheia>) =>
+      boardClaims(reusa, p).map((c) => c.id);
+
+    const p = mesaCheia();
+    p.foundContradictions.push("k1");
+    expect(naMesa(p)).toContain("cl-fora"); // ainda rende a k3
+
+    p.foundContradictions.push("k3");
+    expect(naMesa(p)).not.toContain("cl-fora"); // agora sim, esgotada
+  });
+
+  it("itens que não participam de contradição nenhuma nunca saem", () => {
+    const p = mesaCheia();
+    p.readInterviews.add("ana:ana-2"); // cl-conf não está em contradição alguma
+    p.foundContradictions.push("k1", "k2");
+    expect(boardClaims(lab, p).map((c) => c.id)).toEqual(["cl-conf"]);
+    expect(boardFacts(lab, p)).toEqual([]);
   });
 });
 
