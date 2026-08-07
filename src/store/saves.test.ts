@@ -82,6 +82,26 @@ describe("loadSave", () => {
     expect(s.elapsedMs).toBe(60000);
   });
 
+  it("save gravado antes das dicas carrega com hintPoints zerado", () => {
+    // Save antigo de verdade: a chave nem existe no JSON.
+    const { ...antigo } = validSave;
+    delete (antigo as Record<string, unknown>).hintPoints;
+    writeSave(c.id, antigo as CaseSave);
+    expect(loadSave(c)!.hintPoints).toBe(0);
+  });
+
+  it("hintPoints faz ida e volta", () => {
+    writeSave(c.id, { ...validSave, hintPoints: 7 });
+    expect(loadSave(c)!.hintPoints).toBe(7);
+  });
+
+  it("hintPoints inválido cai para zero em vez de contaminar a nota", () => {
+    for (const lixo of [-5, NaN, "muitos", null]) {
+      writeSave(c.id, { ...validSave, hintPoints: lixo as never });
+      expect(loadSave(c)!.hintPoints).toBe(0);
+    }
+  });
+
   it("descarta save de versão antiga do caso", () => {
     writeSave(c.id, { ...validSave, caseVersion: 2 });
     expect(loadSave(c)).toBeNull();

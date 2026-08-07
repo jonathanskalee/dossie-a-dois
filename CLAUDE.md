@@ -14,7 +14,7 @@ Zustand 5 + vite-plugin-pwa + Vitest. Fontes self-hosted via @fontsource.
 Mesma base do app irmão `../Mimica-na-regua`.
 
 - `npm run dev` — dev server com `--host` (testar no tablet pela rede local)
-- `npm test` — 36 testes (integridade dos casos + lógica pura)
+- `npm test` — 66 testes (integridade dos casos + lógica pura)
 - `npm run build` — tsc + vite build (dist/)
 - `npm run icons` — regenera ícones PWA e `logo.svg` de `scripts/gen-icons.mjs`
 - `npm run art` — converte `art-src/` em webp 512px otimizado em `public/art/`
@@ -92,3 +92,38 @@ tablet: abrir a URL no Chrome → menu → "Adicionar à tela inicial".
 `dossie_settings`, `dossie_save_<caseId>`, `dossie_records`.
 `Case.version`: aumentar ao editar conteúdo de um caso publicado — invalida
 saves antigos daquele caso (de propósito).
+
+**`CaseSave.schema` sobe SÓ quando um campo existente muda de tipo ou de
+significado.** Campo novo com default seguro é aditivo: declare-o opcional e
+leia com `num(p.campo, 0)` em `loadSave`. Subir o schema descarta toda partida
+em andamento em todos os tablets — nunca faça isso por um campo novo.
+
+Cuidado com `openCase` no `gameStore`: o ramo que restaura o save é um spread
+dentro de `set()`, que aceita `Partial<GameState>`. **O TypeScript não cobra
+campos faltando ali.** Todo campo novo de `Progress` precisa ser copiado à mão,
+senão o valor do caso anterior vaza para o caso novo.
+
+## Instruções (primeira partida)
+
+`HowToPlayScreen` é a tela "Como se joga". Na primeira vez, `goCaseSelect()`
+desvia para ela em vez de abrir o arquivo — a dupla é instruída no caminho que
+já escolheu, sem sequestrar a intenção. `finishHowToPlay()` grava
+`settings.onboarded` e segue para o arquivo; da segunda vez em diante o botão
+da capa vai direto. A tela continua acessível pelo botão "Como se joga".
+
+A tela ensina mostrando: usa as marcas reais (`.mark-claim`/`.mark-fact`) e a
+mesma faixa fala × prova que a Mesa monta. Se essas peças mudarem de aparência,
+atualize a tela junto — o valor dela é o reconhecimento.
+
+## Dicas e caderno
+
+`src/store/hints.ts` e `src/store/notebook.ts` são puros e derivam tudo dos
+dados do caso — **não escreva dica nem resumo à mão por contradição**, ou cada
+caso novo multiplicaria o trabalho de autoria. As telas só pintam o que vem
+pronto (inclusive o preço do próximo degrau: zero aritmética em TSX).
+
+A dica tem três degraus (suspeito → prova → par exato) e `hintFor` devolve
+`null` no que o nível ainda não libera, então não há como vazar a resposta por
+descuido de JSX. Quando nada é cruzável, a dica é de graça e diz qual lado
+falta. Custo: 1/2/3 por degrau, com teto `HINT_PENALTY_CAP` — dica custa no
+máximo uma estrela.

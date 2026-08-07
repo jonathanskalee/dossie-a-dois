@@ -10,6 +10,7 @@ import { IconSom, IconVibrar } from "../components/icons";
 
 export function TitleScreen() {
   const goCaseSelect = useGame((s) => s.goCaseSelect);
+  const goHowToPlay = useGame((s) => s.goHowToPlay);
   const settings = useGame((s) => s.settings);
   const toggleSound = useGame((s) => s.toggleSound);
   const toggleVibe = useGame((s) => s.toggleVibe);
@@ -46,6 +47,9 @@ export function TitleScreen() {
       <div className="anim-fade-up flex w-full max-w-sm flex-col gap-5" style={{ animationDelay: "140ms" }}>
         <BigButton onClick={goCaseSelect} className="w-full">
           Abrir o arquivo de casos
+        </BigButton>
+        <BigButton onClick={goHowToPlay} variant="ghost" className="w-full">
+          Como se joga
         </BigButton>
 
         <div className="flex justify-center gap-3">

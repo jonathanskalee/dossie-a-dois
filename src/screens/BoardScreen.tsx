@@ -10,8 +10,11 @@
  */
 import { useGame } from "../store/gameStore";
 import { heardClaims, seenFacts } from "../store/progress";
-import { BigButton, Meter, Pill, TopBar } from "../components/ui";
-import { IconDestrancado, IconFrasco, IconLupa, IconMesa, IconRaio } from "../components/icons";
+import { hintFor } from "../store/hints";
+import { BigButton, Meter, TopBar } from "../components/ui";
+import { Notebook } from "../components/Notebook";
+import { HintPanel } from "../components/HintPanel";
+import { IconCaderno, IconDestrancado, IconDica, IconFrasco, IconLupa, IconRaio } from "../components/icons";
 
 export function BoardScreen() {
   const c = useGame((s) => s.caseData);
@@ -20,7 +23,19 @@ export function BoardScreen() {
   const wrongPairs = useGame((s) => s.wrongPairs);
   const readInterviews = useGame((s) => s.readInterviews);
   const viewedEvidence = useGame((s) => s.viewedEvidence);
-  const progress = { unlockedLeads, foundContradictions, wrongPairs, readInterviews, viewedEvidence };
+  const hintPoints = useGame((s) => s.hintPoints);
+  const hintLevel = useGame((s) => s.hintLevel);
+  const hintTargetId = useGame((s) => s.hintTargetId);
+  const openHints = useGame((s) => s.openHints);
+  const openNotebook = useGame((s) => s.openNotebook);
+  const progress = {
+    unlockedLeads,
+    foundContradictions,
+    wrongPairs,
+    readInterviews,
+    viewedEvidence,
+    hintPoints,
+  };
   const selectedClaim = useGame((s) => s.selectedClaim);
   const selectedFact = useGame((s) => s.selectedFact);
   const selectClaim = useGame((s) => s.selectClaim);
@@ -43,14 +58,27 @@ export function BoardScreen() {
   const fact = facts.find((f) => f.id === selectedFact);
   const shaking = flashWrong > 0 && !reveal;
 
+  // No terceiro degrau a dica entrega o par; a Mesa destaca os dois cartões.
+  const apontado = hintLevel === 3 ? hintFor(c, progress, hintLevel, hintTargetId) : null;
+  const falaApontada = apontado?.kind === "hint" ? apontado.claimId : null;
+  const provaApontada = apontado?.kind === "hint" ? apontado.factId : null;
+
+  const botaoTopo =
+    "flex size-11 items-center justify-center rounded-full border border-muted/40 text-fg active:bg-surface";
+
   return (
     <main className="mx-auto min-h-dvh max-w-2xl px-5 pb-52">
       <TopBar
         title="Mesa de Contradições"
         right={
-          <Pill>
-            <IconMesa /> juntos
-          </Pill>
+          <div className="flex gap-2">
+            <button type="button" onClick={openNotebook} aria-label="Abrir o caderno do caso" className={botaoTopo}>
+              <IconCaderno />
+            </button>
+            <button type="button" onClick={openHints} aria-label="Pedir uma dica" className={botaoTopo}>
+              <IconDica />
+            </button>
+          </div>
         }
       />
 
@@ -102,7 +130,7 @@ export function BoardScreen() {
                     selectedClaim === cl.id
                       ? "border-accent bg-accent/15 text-fg shadow-[0_0_0_3px] shadow-accent/20"
                       : "border-muted/30 bg-surface text-fg/85 active:bg-accent/10"
-                  }`}
+                  } ${falaApontada === cl.id ? "ring-2 ring-danger" : ""}`}
                 >
                   {cl.summary}
                   <span className="mt-1.5 block font-display text-xs uppercase tracking-wider text-muted">
@@ -135,7 +163,7 @@ export function BoardScreen() {
                     selectedFact === f.id
                       ? "border-accent2 bg-accent2/15 text-fg shadow-[0_0_0_3px] shadow-accent2/20"
                       : "border-muted/30 bg-surface text-fg/85 active:bg-accent2/10"
-                  }`}
+                  } ${provaApontada === f.id ? "ring-2 ring-danger" : ""}`}
                 >
                   {f.summary}
                   <span className="mt-1.5 block font-display text-xs uppercase tracking-wider text-muted">
@@ -197,12 +225,15 @@ export function BoardScreen() {
         </div>
       </footer>
 
-      {/* revelação de contradição */}
+      <Notebook />
+      <HintPanel />
+
+      {/* revelação de contradição — z-40 para ganhar dos painéis (z-30) */}
       {reveal && (
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-30 flex items-center justify-center bg-black/75 p-6"
+          className="fixed inset-0 z-40 flex items-center justify-center bg-black/75 p-6"
         >
           <div className="dossier anim-pop anim-reveal max-h-[82dvh] w-full max-w-lg overflow-y-auto p-6 sm:p-8">
             <span className="stamp anim-stamp-flat text-danger">Contradição</span>

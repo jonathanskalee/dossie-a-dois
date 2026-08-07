@@ -18,7 +18,10 @@ export function BigButton(props: {
       ? "bg-accent text-bg shadow-[0_6px_0_rgba(0,0,0,.35)] active:shadow-[0_2px_0_rgba(0,0,0,.35)] active:translate-y-1"
       : variant === "danger"
         ? "bg-danger text-bg shadow-[0_6px_0_rgba(0,0,0,.35)] active:shadow-[0_2px_0_rgba(0,0,0,.35)] active:translate-y-1"
-        : "bg-transparent text-fg border border-muted/50 active:bg-surface";
+        : // `text-inherit`, não `text-fg`: dentro de um `.dossier` a cor do
+          // texto é `--t-ink` (papel claro), e fixar `fg` deixaria o rótulo
+          // invisível sobre o papel.
+          "bg-transparent text-inherit border border-muted/50 active:bg-surface/40";
   return (
     <button
       type="button"

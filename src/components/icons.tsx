@@ -95,6 +95,28 @@ export function IconDestrancado(props: { className?: string }) {
   );
 }
 
+/** Caderno de espiral — o registro do que já se descobriu. */
+export function IconCaderno(props: { className?: string }) {
+  return (
+    <I className={props.className}>
+      <path d="M7 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7Z" />
+      <path d="M7 3H5.5A1.5 1.5 0 0 0 4 4.5v15A1.5 1.5 0 0 0 5.5 21H7" />
+      <path d="M10.5 8.5h5M10.5 12.5h5" />
+    </I>
+  );
+}
+
+/** Ponto de interrogação — pedir uma dica. */
+export function IconDica(props: { className?: string }) {
+  return (
+    <I className={props.className}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M9.4 9.2a2.7 2.7 0 0 1 5.2.9c0 1.8-2.6 2.2-2.6 4" />
+      <path d="M12 17.4v.1" />
+    </I>
+  );
+}
+
 export function IconCheck(props: { className?: string }) {
   return (
     <I className={props.className}>

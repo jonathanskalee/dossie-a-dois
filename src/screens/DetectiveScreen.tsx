@@ -3,14 +3,27 @@ import { visibleInterviews, visibleSuspects } from "../store/progress";
 import { SegmentText } from "../components/SegmentText";
 import { Pill, RoleBadge, TopBar } from "../components/ui";
 import { Portrait } from "../components/Portrait";
-import { IconFrasco, IconMesa } from "../components/icons";
+import { Notebook } from "../components/Notebook";
+import { IconCaderno, IconFrasco, IconMesa } from "../components/icons";
 
-/** Rodapé fixo com as saídas do turno. */
+/**
+ * Rodapé fixo com as saídas do turno. Definido uma vez e usado nos três ramos
+ * de render da tela — por isso o caderno entra aqui, e não na TopBar.
+ */
 function TurnFooter() {
   const passTo = useGame((s) => s.passTo);
+  const openNotebook = useGame((s) => s.openNotebook);
   return (
     <footer className="fixed inset-x-0 bottom-0 z-20 border-t border-muted/20 bg-bg/95 px-5 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 backdrop-blur">
       <div className="mx-auto flex max-w-2xl gap-3">
+        <button
+          type="button"
+          onClick={openNotebook}
+          aria-label="Abrir o caderno do caso"
+          className="flex min-h-13 w-13 shrink-0 items-center justify-center rounded-2xl border border-muted/40 text-fg active:bg-surface"
+        >
+          <IconCaderno className="size-6" />
+        </button>
         <button
           type="button"
           onClick={() => passTo("perito")}
@@ -26,6 +39,8 @@ function TurnFooter() {
           <IconMesa /> Ir para a Mesa
         </button>
       </div>
+      {/* o caderno mora junto do botão que o abre: um lugar só para os 3 ramos */}
+      <Notebook />
     </footer>
   );
 }

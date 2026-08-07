@@ -64,6 +64,9 @@ export function ResultScreen() {
             − {score.parts.penalty} pontos por palpites errados na Mesa
           </p>
         )}
+        {score.parts.hints > 0 && (
+          <p className="text-sm text-danger">− {score.parts.hints} pontos por dicas pedidas</p>
+        )}
       </div>
 
       <div className="anim-fade-up mt-8" style={{ animationDelay: "480ms" }}>

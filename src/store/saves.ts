@@ -25,6 +25,12 @@ export interface CaseSave {
   accusation: { who?: string; how?: string; why?: string };
   elapsedMs: number;
   savedAtMs: number;
+  /**
+   * Ausente nos saves gravados antes das dicas — por isso opcional, e por isso
+   * o `schema` NÃO sobe: campo novo com default seguro é aditivo. Subir o
+   * schema apagaria toda partida em andamento em troca de nada.
+   */
+  hintPoints?: number;
 }
 
 function strArray(v: unknown, allowed: (s: string) => boolean): string[] {
@@ -101,6 +107,7 @@ export function loadSave(c: Case): (Progress & { accusation: CaseSave["accusatio
     }),
     readInterviews: new Set(strArray(p.readInterviews, (s) => interviewKeys.has(s))),
     viewedEvidence: new Set(strArray(p.viewedEvidence, (s) => evidenceIds.has(s))),
+    hintPoints: num(p.hintPoints, 0),
     accusation: {
       who: typeof acc.who === "string" && suspectIds.has(acc.who) ? acc.who : undefined,
       how: typeof acc.how === "string" && howIds.has(acc.how) ? acc.how : undefined,

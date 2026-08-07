@@ -14,12 +14,14 @@ import { loadCase } from "../data/cases";
 import { now } from "../lib/clock";
 import { keepAwake, releaseAwake, setSound, setVibe, sfx, unlockAudio, vibrate } from "../lib/fx";
 import { emptyProgress, pairKey, tryContradiction, type Progress } from "./progress";
+import { hintFor, type HintLevel } from "./hints";
 import { clearSave, loadSave, saveRecord, writeSave, type CaseSave } from "./saves";
 import { computeScore, scoreInputFromCase, type ScoreResult } from "./scoring";
 import { DEFAULT_SETTINGS, loadSettings, saveSettings, type Settings } from "./settings";
 
 export type ScreenName =
   | "title"
+  | "howToPlay"
   | "caseSelect"
   | "caseIntro"
   | "handoff"
@@ -62,6 +64,13 @@ export interface GameState extends Progress {
   /** Feedback de erro na mesa; contador para reiniciar a animação CSS. */
   flashWrong: number;
 
+  /** Dicas: nível já pago e a contradição em que a escada está fixada. */
+  hintLevel: 0 | HintLevel;
+  hintTargetId: string | null;
+  /** Painéis sobrepostos (efêmeros, nunca persistidos). */
+  hintOpen: boolean;
+  notebookOpen: boolean;
+
   accusation: { who?: string; how?: string; why?: string };
   score: ScoreResult | null;
 
@@ -72,6 +81,10 @@ export interface GameState extends Progress {
   /* ---- ações ---- */
   goTitle(): void;
   goCaseSelect(): void;
+  /** Abre as instruções por vontade própria (botão da capa). */
+  goHowToPlay(): void;
+  /** Sai das instruções para o arquivo e marca a dupla como instruída. */
+  finishHowToPlay(): void;
   openCase(caseId: string): Promise<void>;
   startInvestigation(): void;
   /** Sair da tela de papel/mesa para o handoff. */
@@ -91,6 +104,14 @@ export interface GameState extends Progress {
   registerContradiction(): void;
   dismissReveal(): void;
 
+  /** Abre o painel de dicas sem cobrar nada. */
+  openHints(): void;
+  /** Sobe um degrau da escada e cobra o preço do degrau. */
+  askHint(): void;
+  closeHints(): void;
+  openNotebook(): void;
+  closeNotebook(): void;
+
   goAccusation(): void;
   setAccusation(part: "who" | "how" | "why", id: string): void;
   confirmAccusation(): void;
@@ -100,7 +121,6 @@ export interface GameState extends Progress {
 
   toggleSound(): void;
   toggleVibe(): void;
-  markOnboarded(): void;
 }
 
 function elapsedNow(s: Pick<GameState, "elapsedMsBase" | "sessionStartMs">): number {
@@ -121,9 +141,15 @@ function persistProgress(get: () => GameState) {
     accusation: s.accusation,
     elapsedMs: elapsedNow(s),
     savedAtMs: now(),
+    hintPoints: s.hintPoints,
   };
   writeSave(s.caseData.id, save);
 }
+
+/** Fecha os painéis sobrepostos sem mexer na escada de dicas. */
+const CLOSED_PANELS = { hintOpen: false, notebookOpen: false } as const;
+/** Fecha os painéis E reinicia a escada (nova contradição, novo caso). */
+const CLEAR_HINTS = { ...CLOSED_PANELS, hintLevel: 0 as const, hintTargetId: null };
 
 const initialSettings = loadSettings();
 setSound(initialSettings.soundOn);
@@ -147,6 +173,11 @@ export const useGame = create<GameState>((set, get) => ({
   reveal: null,
   flashWrong: 0,
 
+  hintLevel: 0,
+  hintTargetId: null,
+  hintOpen: false,
+  notebookOpen: false,
+
   accusation: {},
   score: null,
 
@@ -157,14 +188,41 @@ export const useGame = create<GameState>((set, get) => ({
 
   goTitle() {
     releaseAwake();
-    set({ screen: "title", caseId: null, caseData: null });
+    set({ screen: "title", caseId: null, caseData: null, ...CLEAR_HINTS });
   },
 
   goCaseSelect() {
+    const s = get();
     unlockAudio();
     sfx.page();
     releaseAwake();
-    set({ screen: "caseSelect", caseId: null, caseData: null });
+    // Na primeira vez, o caminho para o arquivo passa pelas instruções: é o
+    // momento em que a dupla escolhe os papéis, antes de ver qualquer caso.
+    if (!s.settings.onboarded) {
+      set({ screen: "howToPlay", caseId: null, caseData: null, ...CLEAR_HINTS });
+      return;
+    }
+    set({ screen: "caseSelect", caseId: null, caseData: null, ...CLEAR_HINTS });
+  },
+
+  goHowToPlay() {
+    if (get().screen !== "title") return;
+    unlockAudio();
+    sfx.page();
+    set({ screen: "howToPlay" });
+  },
+
+  finishHowToPlay() {
+    const s = get();
+    if (s.screen !== "howToPlay") return;
+    sfx.stamp();
+    vibrate(20);
+    if (!s.settings.onboarded) {
+      const settings = { ...s.settings, onboarded: true };
+      saveSettings(settings);
+      set({ settings });
+    }
+    set({ screen: "caseSelect" });
   },
 
   async openCase(caseId) {
@@ -198,6 +256,11 @@ export const useGame = create<GameState>((set, get) => ({
       score: null,
       elapsedMsBase: saved?.elapsedMs ?? 0,
       sessionStartMs: now(),
+      ...CLEAR_HINTS,
+      // ATENÇÃO: `set` aceita Partial<GameState>, então o TypeScript NÃO cobra
+      // campos faltando neste ramo. Todo campo novo de `Progress` precisa ser
+      // copiado aqui à mão — esquecer faz o valor do caso anterior vazar para
+      // o caso novo.
       ...(saved
         ? {
             unlockedLeads: saved.unlockedLeads,
@@ -205,6 +268,7 @@ export const useGame = create<GameState>((set, get) => ({
             wrongPairs: saved.wrongPairs,
             readInterviews: saved.readInterviews,
             viewedEvidence: saved.viewedEvidence,
+            hintPoints: saved.hintPoints,
           }
         : emptyProgress()),
     });
@@ -232,6 +296,10 @@ export const useGame = create<GameState>((set, get) => ({
       openSuspectId: null,
       openInterviewId: null,
       openEvidenceId: null,
+      // Fecha os painéis, mas NÃO reinicia a escada: sair para interrogar é
+      // exatamente o que a dica sem alvo mandou fazer — recobrar o nível 1 na
+      // volta seria uma armadilha.
+      ...CLOSED_PANELS,
     });
     persistProgress(get);
   },
@@ -319,6 +387,8 @@ export const useGame = create<GameState>((set, get) => ({
         reveal: { contradiction: result.contradiction, newLeads: result.newLeads },
         selectedClaim: null,
         selectedFact: null,
+        // destravou: a escada recomeça do zero para a próxima contradição
+        ...CLEAR_HINTS,
       });
       persistProgress(get);
       return;
@@ -348,6 +418,60 @@ export const useGame = create<GameState>((set, get) => ({
     if (s.screen !== "board" || !s.reveal) return;
     if (s.reveal.newLeads.length > 0) sfx.unlock();
     set({ reveal: null });
+  },
+
+  openHints() {
+    const s = get();
+    if (s.screen !== "board" || s.reveal) return;
+    sfx.page();
+    set({ hintOpen: true, notebookOpen: false });
+  },
+
+  askHint() {
+    const s = get();
+    if (s.screen !== "board" || s.reveal || !s.caseData) return;
+    const atual = hintFor(s.caseData, s, s.hintLevel, s.hintTargetId);
+    // Sem nada cruzável agora: o painel abre com o recado, de graça.
+    if (atual.kind === "none") {
+      set({ hintOpen: true });
+      return;
+    }
+    const proximo = atual.nextLevel;
+    const custo = atual.nextCost;
+    if (proximo === null || custo === null) return; // já no último degrau
+
+    const revelada = hintFor(s.caseData, s, proximo, s.hintTargetId);
+    sfx.unlock();
+    vibrate(15);
+    set({
+      hintLevel: proximo,
+      hintTargetId: revelada.kind === "hint" ? revelada.contradictionId : null,
+      hintPoints: s.hintPoints + custo,
+      hintOpen: true,
+    });
+    persistProgress(get);
+  },
+
+  closeHints() {
+    if (get().screen !== "board") return;
+    sfx.page();
+    set({ hintOpen: false });
+  },
+
+  openNotebook() {
+    const s = get();
+    const onde: ScreenName[] = ["board", "detective", "perito"];
+    if (!onde.includes(s.screen) || s.reveal) return;
+    sfx.page();
+    set({ notebookOpen: true, hintOpen: false });
+  },
+
+  closeNotebook() {
+    const s = get();
+    const onde: ScreenName[] = ["board", "detective", "perito"];
+    if (!onde.includes(s.screen)) return;
+    sfx.page();
+    set({ notebookOpen: false });
   },
 
   goAccusation() {
@@ -399,7 +523,7 @@ export const useGame = create<GameState>((set, get) => ({
     const s = get();
     if (s.screen !== "result") return;
     releaseAwake();
-    set({ screen: "caseSelect", caseId: null, caseData: null, score: null });
+    set({ screen: "caseSelect", caseId: null, caseData: null, score: null, ...CLEAR_HINTS });
   },
 
   /** Sair no meio do caso (progresso já está salvo a cada ação). */
@@ -408,7 +532,7 @@ export const useGame = create<GameState>((set, get) => ({
     if (!s.caseData) return;
     persistProgress(get);
     releaseAwake();
-    set({ screen: "caseSelect", caseId: null, caseData: null });
+    set({ screen: "caseSelect", caseId: null, caseData: null, ...CLEAR_HINTS });
   },
 
   toggleSound() {
@@ -423,14 +547,6 @@ export const useGame = create<GameState>((set, get) => ({
     const s = get();
     const settings = { ...s.settings, vibeOn: !s.settings.vibeOn };
     setVibe(settings.vibeOn);
-    saveSettings(settings);
-    set({ settings });
-  },
-
-  markOnboarded() {
-    const s = get();
-    if (s.settings.onboarded) return;
-    const settings = { ...s.settings, onboarded: true };
     saveSettings(settings);
     set({ settings });
   },

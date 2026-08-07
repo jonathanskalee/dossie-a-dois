@@ -4,7 +4,17 @@
  *
  * Nada aqui toca o Zustand, o DOM ou efeitos — tudo testável direto.
  */
-import type { Case, ClaimId, Contradiction, FactId, Lead, Suspect } from "../data/types";
+import type {
+  Case,
+  ClaimId,
+  Contradiction,
+  EvidenceId,
+  FactId,
+  InterviewId,
+  Lead,
+  Suspect,
+  SuspectId,
+} from "../data/types";
 import { claimOwners, factOwners, lockedAtStart } from "../data/solveCase";
 
 export interface Progress {
@@ -14,6 +24,8 @@ export interface Progress {
   wrongPairs: string[];
   readInterviews: Set<string>; // "suspectId:interviewId"
   viewedEvidence: Set<string>;
+  /** Custo acumulado das dicas pedidas neste caso (ver store/hints.ts). */
+  hintPoints: number;
 }
 
 export function emptyProgress(): Progress {
@@ -23,11 +35,62 @@ export function emptyProgress(): Progress {
     wrongPairs: [],
     readInterviews: new Set(),
     viewedEvidence: new Set(),
+    hintPoints: 0,
   };
 }
 
 export function pairKey(claimId: ClaimId, factId: FactId): string {
   return `${claimId}|${factId}`;
+}
+
+/* -------- índices crus de alegações e fatos -------- */
+
+/**
+ * `heardClaims`/`seenFacts` filtram pelo que já foi lido/visto. As dicas e o
+ * caderno precisam resolver id → nome independentemente disso, então têm
+ * índices próprios sobre o caso inteiro.
+ */
+
+export interface ClaimRef {
+  id: ClaimId;
+  summary: string;
+  suspectId: SuspectId;
+  suspectName: string;
+  interviewId: InterviewId;
+  question: string;
+}
+
+export interface FactRef {
+  id: FactId;
+  summary: string;
+  evidenceId: EvidenceId;
+  evidenceName: string;
+}
+
+export function claimIndex(c: Case): Map<ClaimId, ClaimRef> {
+  const out = new Map<ClaimId, ClaimRef>();
+  for (const s of c.suspects)
+    for (const i of s.interviews)
+      for (const cl of i.claims) {
+        out.set(cl.id, {
+          id: cl.id,
+          summary: cl.summary,
+          suspectId: s.id,
+          suspectName: s.name,
+          interviewId: i.id,
+          question: i.question,
+        });
+      }
+  return out;
+}
+
+export function factIndex(c: Case): Map<FactId, FactRef> {
+  const out = new Map<FactId, FactRef>();
+  for (const e of c.evidence)
+    for (const f of e.facts) {
+      out.set(f.id, { id: f.id, summary: f.summary, evidenceId: e.id, evidenceName: e.name });
+    }
+  return out;
 }
 
 /* -------- visibilidade -------- */

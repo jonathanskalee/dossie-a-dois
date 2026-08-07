@@ -1,6 +1,7 @@
 import { useGame } from "./store/gameStore";
 import { useTheme } from "./hooks/useTheme";
 import { TitleScreen } from "./screens/TitleScreen";
+import { HowToPlayScreen } from "./screens/HowToPlayScreen";
 import { CaseSelectScreen } from "./screens/CaseSelectScreen";
 import { CaseIntroScreen } from "./screens/CaseIntroScreen";
 import { HandoffScreen } from "./screens/HandoffScreen";
@@ -18,6 +19,8 @@ export function App() {
   switch (screen) {
     case "title":
       return <TitleScreen />;
+    case "howToPlay":
+      return <HowToPlayScreen />;
     case "caseSelect":
       return <CaseSelectScreen />;
     case "caseIntro":
