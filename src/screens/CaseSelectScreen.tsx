@@ -16,6 +16,7 @@ const PREVIEW: Record<ThemeId, { emoji: string; chip: string; klass: string }> =
   cozy: { emoji: "🌷", chip: "Vila · Aconchegante", klass: "from-[#b0563b] to-[#8f4630] text-[#fdf4e3]" },
   tech: { emoji: "📱", chip: "Thriller · Digital", klass: "from-[#0d1622] to-[#122c3a] text-[#7fd4f8]" },
   occult: { emoji: "🕯️", chip: "Mansão · Oculto", klass: "from-[#191223] to-[#2a1b2e] text-[#cf9433]" },
+  folia: { emoji: "🥁", chip: "Carnaval · Barracão", klass: "from-[#2a0f38] to-[#4a1240] text-[#ff6fae]" },
 };
 
 const DIFFICULTY = ["Leve", "Cabeludo", "Difícil"] as const;

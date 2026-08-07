@@ -14,7 +14,7 @@ Zustand 5 + vite-plugin-pwa + Vitest. Fontes self-hosted via @fontsource.
 Mesma base do app irmão `../Mimica-na-regua`.
 
 - `npm run dev` — dev server com `--host` (testar no tablet pela rede local)
-- `npm test` — 66 testes (integridade dos casos + lógica pura)
+- `npm test` — 75 testes (integridade dos casos + lógica pura)
 - `npm run build` — tsc + vite build (dist/)
 - `npm run icons` — regenera ícones PWA e `logo.svg` de `scripts/gen-icons.mjs`
 - `npm run art` — converte `art-src/` em webp 512px otimizado em `public/art/`
@@ -90,9 +90,16 @@ tomadas e não devem ser reinventadas.
 (`solveCase.ts`): contradição inalcançável, pista morta ou conteúdo órfão
 derrubam o teste com o id exato do problema.
 
-Temas disponíveis: `noir`, `cozy`, `tech`, `occult`. Tema novo = CSS em
-`src/themes/`, fontes em `src/themes/fonts.ts`, prévia do cartão em
-`CaseSelectScreen.tsx`.
+Temas disponíveis: `noir`, `cozy`, `tech`, `occult`, `folia`. **Tema novo são
+cinco passos**, e o TypeScript só cobra os dois últimos:
+
+1. valor novo em `ThemeId` (`src/data/types.ts`);
+2. `src/themes/<id>.css` com as 12 variáveis `--t-*` e `--t-grain`;
+3. `@import` em `src/index.css` — **falha silenciosa**: sem ele o tema cai no
+   `:root` neutro e nada avisa (por isso existe o teste de tema em
+   `casesIntegrity.test.ts`);
+4. loader de fontes em `src/themes/fonts.ts`;
+5. prévia do cartão em `CaseSelectScreen.tsx`.
 
 ## Deploy
 

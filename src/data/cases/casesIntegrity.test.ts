@@ -4,7 +4,7 @@
  * Caso novo entra no registro → entra automaticamente aqui. Estes testes são a
  * ferramenta de autoria: escreveu caso, rodou `npm test`, corrigiu o que caiu.
  */
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadAllCases, CASE_SUMMARIES } from "./index";
@@ -12,6 +12,23 @@ import { validateCase } from "../validateCase";
 import { solveCase } from "../solveCase";
 
 const cases = await loadAllCases();
+
+describe("temas", () => {
+  // O TypeScript cobra as entradas em LOADERS (fonts.ts) e PREVIEW
+  // (CaseSelectScreen), mas o `@import` do CSS é falha SILENCIOSA: sem ele o
+  // tema cai no :root neutro e nada avisa. Este teste é o aviso.
+  it("todo tema usado por um caso tem CSS e está importado", () => {
+    const raiz = process.cwd();
+    const indexCss = readFileSync(join(raiz, "src", "index.css"), "utf8");
+    const temas = [...new Set(cases.map((c) => c.theme))];
+
+    const semCss = temas.filter((t) => !existsSync(join(raiz, "src", "themes", `${t}.css`)));
+    expect(semCss, "temas sem arquivo CSS").toEqual([]);
+
+    const semImport = temas.filter((t) => !indexCss.includes(`./themes/${t}.css`));
+    expect(semImport, "temas sem @import em index.css").toEqual([]);
+  });
+});
 
 describe("registro", () => {
   it("todo resumo tem caso carregável e consistente", () => {

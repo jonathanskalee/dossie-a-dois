@@ -1,0 +1,45 @@
+/**
+ * Tema FOLIA — barracão de escola de samba, véspera do desfile.
+ * Roxo profundo de galpão à noite, magenta de luz de ensaio, turquesa e
+ * dourado de purpurina. É o tema mais saturado do jogo, de propósito: o
+ * contraste com o noir e o occult faz parte do baralho.
+ */
+:root[data-theme="folia"] {
+  --t-bg: #180a22;
+  --t-surface: #271033;
+  --t-paper: #f9ecd9;
+  --t-ink: #2b1330;
+  --t-fg: #f3e6f5;
+  --t-accent: #ff2e88;
+  --t-accent2: #1fc7c7;
+  --t-ok: #45c48a;
+  --t-danger: #ff5252;
+  --t-muted: #a98cb5;
+  --t-font-display: "Anton", "Bebas Neue", sans-serif;
+  --t-font-body: "Rubik", "Inter", system-ui, sans-serif;
+  /* purpurina: dois brilhos de refletor + pó dourado */
+  --t-grain:
+    radial-gradient(ellipse 60% 40% at 15% 0%, rgba(255, 46, 136, 0.14), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 20%, rgba(31, 199, 199, 0.1), transparent 70%),
+    radial-gradient(rgba(255, 214, 102, 0.22) 0.5px, transparent 1.2px);
+  --t-grain-size: auto, auto, 15px 15px;
+}
+
+/* O "papel" aqui é o risco do carnavalesco: prancha grande, canto dourado. */
+[data-theme="folia"] .dossier {
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px rgba(255, 214, 102, 0.35),
+    0 14px 34px rgba(0, 0, 0, 0.5);
+  background-image: linear-gradient(200deg, rgba(255, 46, 136, 0.07), transparent 45%);
+}
+
+[data-theme="folia"] .panel {
+  border-color: color-mix(in srgb, var(--t-accent) 35%, transparent);
+}
+
+/* Anton já é condensada e pesada; espaçar um pouco evita o bloco maciço. */
+[data-theme="folia"] .theme-title {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}

@@ -44,6 +44,14 @@ export const CASE_SUMMARIES: CaseSummary[] = [
     difficulty: 2,
     estimatedMinutes: 40,
   },
+  {
+    id: "caso05-folia",
+    title: "Ensaio Geral",
+    tagline: "A bateria não parou a noite toda. Foi o que todo mundo jurou.",
+    theme: "folia",
+    difficulty: 3,
+    estimatedMinutes: 45,
+  },
 ];
 
 const LOADERS: Record<string, () => Promise<{ default: Case }>> = {
@@ -51,6 +59,7 @@ const LOADERS: Record<string, () => Promise<{ default: Case }>> = {
   "caso02-cozy": () => import("./caso02Cozy"),
   "caso03-tech": () => import("./caso03Tech"),
   "caso04-occult": () => import("./caso04Occult"),
+  "caso05-folia": () => import("./caso05Folia"),
 };
 
 export async function loadCase(id: string): Promise<Case> {

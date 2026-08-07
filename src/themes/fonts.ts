@@ -35,6 +35,12 @@ const LOADERS: Record<ThemeId, () => Promise<unknown>> = {
       import("@fontsource/eb-garamond/latin-400.css"),
       import("@fontsource/eb-garamond/latin-600.css"),
     ]),
+  folia: () =>
+    Promise.all([
+      import("@fontsource/anton/latin-400.css"),
+      import("@fontsource/rubik/latin-400.css"),
+      import("@fontsource/rubik/latin-600.css"),
+    ]),
 };
 
 export function loadThemeFonts(theme: ThemeId) {

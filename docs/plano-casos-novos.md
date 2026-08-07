@@ -1,10 +1,11 @@
 # Quatro casos novos, quatro temas novos, dicas e caderno
 
 > **Situação em 2026-08-07.** A mecânica (fase 1) está pronta e publicada, mais
-> a tela "Como se joga" e a limpeza da Mesa. **Os quatro casos e os quatro temas
-> não foram iniciados** — são as fases 2 a 5 deste documento, e é aqui que mora
-> todo o material criativo já decidido com o usuário: títulos, culpados, como e
-> por quê, elencos e espinhas de contradição.
+> a tela "Como se joga" e a limpeza da Mesa. O **caso 05 (Carnaval, tema
+> `folia`) está escrito e publicado** — use-o como modelo de escala e ritmo.
+> **Faltam os casos 06, 07 e 08** (fases 3 a 5), e é aqui que mora todo o
+> material criativo já decidido com o usuário: títulos, culpados, como e por
+> quê, elencos e espinhas de contradição.
 >
 > Escolhas do usuário que este plano já incorpora: quatro casos (não três), o
 > caso de praia com o gancho do casal que se cobre e se trai, e um tema visual
@@ -42,7 +43,7 @@ Cada fase termina com `npm test` verde e é publicável sozinha.
 
 1. ~~**Mecânica** (dicas + caderno)~~ — **FEITO** (commits `ee8f3c2` e
    `37cfec4`), junto com a tela "Como se joga".
-2. **Caso 05 + tema `folia`** (Carnaval) — pendente
+2. ~~**Caso 05 + tema `folia`** (Carnaval)~~ — **FEITO**
 3. **Caso 06 + tema `litoral`** (praia) — pendente
 4. **Caso 07 + tema `deco`** (trem) — pendente
 5. **Caso 08 + tema `mesa`** (restaurante) — pendente

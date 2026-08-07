@@ -11,7 +11,7 @@
  * disponível desde o início do caso.
  */
 
-export type ThemeId = "noir" | "cozy" | "tech" | "occult";
+export type ThemeId = "noir" | "cozy" | "tech" | "occult" | "folia";
 
 export type SuspectId = string;
 export type InterviewId = string;
