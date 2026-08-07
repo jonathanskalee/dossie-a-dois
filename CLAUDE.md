@@ -78,6 +78,12 @@ permite a mesma fala em duas contradições (`validateCase` só proíbe o par
 repetido), e é `boardClaims`/`boardFacts` em `progress.ts` que garante isso.
 Itens que não entram em contradição nenhuma (as pistas falsas) nunca saem.
 
+**O que vem a seguir está escrito.** `docs/plano-casos-novos.md` tem os quatro
+próximos casos já desenhados com o usuário — título, tema, culpado, como, por
+quê, elenco e espinha das contradições — mais o passo a passo de como criar um
+tema novo. Leia antes de começar qualquer caso: as decisões criativas já foram
+tomadas e não devem ser reinventadas.
+
 **Caso novo:** criar o arquivo, registrar resumo + loader em
 `src/data/cases/index.ts`, rodar `npm test`. Os testes de integridade
 (`casesIntegrity.test.ts`) validam referências e simulam a solução completa
